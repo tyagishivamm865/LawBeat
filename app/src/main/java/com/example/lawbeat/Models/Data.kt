@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Data(
     @Expose
+    @SerializedName("newsTabLayout")
+    val newsTabLayout: Int=1,
+    @Expose
     @SerializedName("Date")
     val Date: String,
     @Expose

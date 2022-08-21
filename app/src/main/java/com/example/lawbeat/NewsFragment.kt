@@ -6,40 +6,41 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.lawbeat.Models.Data
+import com.example.lawbeat.Models.NewsData
+import com.example.lawbeat.Models.Resource
 import com.example.lawbeat.Models.StaticData
 import com.example.lawbeat.NewsAdapter.NewsAdapter
-import com.example.lawbeat.NewsApi.RetrofitInstance
+import com.example.lawbeat.NewsAdapter.ViewPagerAdapter
+import com.example.lawbeat.NewsApi.ApiInterface
+import com.example.lawbeat.repository.NewsRepository
+import com.example.lawbeat.viewmodel.NewsViewModel
 import kotlinx.android.synthetic.main.fragment_news.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [NewsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NewsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    lateinit var viewModel: NewsViewModel
+    lateinit var userAdapter: NewsAdapter
+    val myviewModel: NewsViewModel by viewModels()
+
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: NewsAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+
     }
 
     override fun onCreateView(
@@ -53,33 +54,63 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = RetrofitInstance.api.getNews(50,1,3)
-            if (result != null)
-            // Checking the results
-                Log.d("ayush: ", result.body().toString())
+
+        val dataRepo = NewsRepository()
+        viewModel =
+            ViewModelProvider(this, NewsModelFactory(dataRepo)).get(NewsViewModel::class.java)
+        val tid = arguments?.getInt("position")
+
+        val job = lifecycleScope.launchWhenCreated {
+                viewModel.getUsers(2)
+
         }
 
-        val dataList = ArrayList<StaticData>()
-        dataList.add(StaticData(NewsAdapter.VIEWFIRST, "CBI raids over 20 places , including Sisodia's house",R.drawable.newws,"John Doe",1))
-        dataList.add(StaticData(NewsAdapter.VIEWDEFAULT, "How India's richest sport got a star from its poorest place",R.drawable.rich,"M Smith",2))
-        dataList.add(StaticData(NewsAdapter.VIEWDEFAULT, "Mumbai's thriller: Guns might belong to UK security firm",R.drawable.newws,"John Doe",3))
-        dataList.add(StaticData(NewsAdapter.VIEWDEFAULT, "Shahbaz's journey: From most backward district to Team India",R.drawable.ic_baseline_image_24,"M Smith",4))
-        dataList.add(StaticData(NewsAdapter.VIEWDEFAULT, "Paytm CEO faces biggest test since IPO dud",R.drawable.ic_baseline_image_24,"John Doe",5))
-        dataList.add(StaticData(NewsAdapter.VIEWDEFAULT, "Punjabi 4th most spoken language in Canada",R.drawable.ic_baseline_image_24,"M Smith",6))
-        dataList.add(StaticData(NewsAdapter.VIEWDEFAULT, "3 conversations I had in 'new' Kashmir",R.drawable.ic_baseline_image_24,"John Doe",7))
+        Log.d("fetch", job.toString())
 
 
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView = view.findViewById(R.id.recyclerview)
-        recyclerview.layoutManager = layoutManager
-        recyclerView.setHasFixedSize(true)
-        adapter = NewsAdapter(context?.applicationContext,dataList)
-        recyclerView.adapter = adapter
+
+        viewModel.userData.observe(viewLifecycleOwner, Observer
+        { response ->
+            Log.d("response", response.data?.message.toString())
+            when (response) {
+                is Resource.Success -> {
+//                    hideProgressBar()
+                    response.data?.let { userResponse ->
+                        userAdapter = NewsAdapter(context, userResponse.data)
+                        recyclerview.adapter = userAdapter
+                        recyclerview.layoutManager = LinearLayoutManager(context)
+                    }
+                }
+                is Resource.Error -> {
+//                    hideProgressBar()
+                    response.message?.let {
+                        Log.e("usermessage", "An error occured:$it")
+                    }
+                }
+//                is Resource.Loading -> {
+////                    showProgressBar()
+//                    Log.e("loading", "Loading heavily")
+//
+//                }
+                else -> {
+                    Log.e("loading", "Loading heavily")
+                }
+            }
+
+        })
 
 
     }
-
-
-
 }
+
+
+
+
+
+
+//            val tid = requireArguments().getInt("position")
+
+
+
+
+

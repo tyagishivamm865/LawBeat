@@ -36,6 +36,12 @@ class MainActivity : AppCompatActivity() {
         tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager!!.currentItem = tab.position
+                val mBundle = Bundle()
+                mBundle.putInt("position",viewPager!!.currentItem)
+                var frag = NewsFragment()
+                frag.arguments=mBundle
+
+
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {

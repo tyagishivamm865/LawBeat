@@ -7,17 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.lawbeat.Models.Data
 import com.example.lawbeat.Models.StaticData
 import com.example.lawbeat.R
 
-class NewsAdapter(context: Context?,news:ArrayList<StaticData>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NewsAdapter(context: Context?,news:List<Data>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val VIEWFIRST = 1
         const val VIEWDEFAULT = 2
     }
     private var context: Context? = context
-    var news: ArrayList<StaticData> = news
+    var news: List<Data> = news
 
     private inner class NewsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var textView: TextView = itemView.findViewById(R.id.textView)
@@ -26,9 +28,9 @@ class NewsAdapter(context: Context?,news:ArrayList<StaticData>): RecyclerView.Ad
 
         fun bind(position: Int) {
             val p = news[position]
-            textView.text = p.newsTitle
-            textView2.text = p.newsAuthorName
-            imageView2.setImageResource(p.newsImage)
+            textView.text = p.title
+            textView2.text = p.author_name
+            context?.let { Glide.with(it).load(p.Image).into(imageView2) }
 
         }
 
@@ -42,9 +44,9 @@ class NewsAdapter(context: Context?,news:ArrayList<StaticData>): RecyclerView.Ad
 
         fun bind(position: Int) {
             val p = news[position]
-            textViewDefault.text = p.newsTitle
-            textView2Default.text = p.newsAuthorName
-            imageView2Default.setImageResource(p.newsImage)
+            textViewDefault.text = p.title
+            textView2Default.text = p.author_name
+            context?.let { Glide.with(it).load(p.Image).into(imageView2Default) }
 
         }
 
