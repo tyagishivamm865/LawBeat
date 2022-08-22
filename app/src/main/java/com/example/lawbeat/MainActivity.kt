@@ -1,6 +1,7 @@
 package com.example.lawbeat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.lawbeat.NewsAdapter.ViewPagerAdapter
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
         val adapter = ViewPagerAdapter(this, supportFragmentManager, tabLayout!!.tabCount)
+        Log.d("tabcount", tabLayout!!.tabCount.toString())
         viewPager!!.adapter = adapter
 
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
@@ -36,10 +38,12 @@ class MainActivity : AppCompatActivity() {
         tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager!!.currentItem = tab.position
-                val mBundle = Bundle()
-                mBundle.putInt("position",viewPager!!.currentItem)
-                var frag = NewsFragment()
-                frag.arguments=mBundle
+//                var fragment = NewsFragment()
+//                val mBundle = Bundle()
+//                var tid=mBundle.putInt("position",tab.position+1)
+//                Log.d("pppp",tid.toString())
+//                fragment.arguments=mBundle
+//                supportFragmentManager.beginTransaction().replace(R.id.viewpager,fragment).commit()
 
 
             }

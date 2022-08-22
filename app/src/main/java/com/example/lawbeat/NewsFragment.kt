@@ -32,6 +32,7 @@ class NewsFragment : Fragment() {
     lateinit var viewModel: NewsViewModel
     lateinit var userAdapter: NewsAdapter
     val myviewModel: NewsViewModel by viewModels()
+    private var tid by Delegates.notNull<Int>()
 
 
     private lateinit var recyclerView: RecyclerView
@@ -41,12 +42,15 @@ class NewsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
 
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_news, container, false)
     }
@@ -54,14 +58,19 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+//        tid= (arguments?.get("position") as Int?)!!
+
+//        Log.d("position",tid.toString())
 
         val dataRepo = NewsRepository()
         viewModel =
             ViewModelProvider(this, NewsModelFactory(dataRepo)).get(NewsViewModel::class.java)
-        val tid = arguments?.getInt("position")
+
 
         val job = lifecycleScope.launchWhenCreated {
-                viewModel.getUsers(2)
+//            if (tid != null) {
+                viewModel.getUsers(1)
+//            }
 
         }
 
