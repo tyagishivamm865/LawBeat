@@ -18,8 +18,6 @@ import com.example.lawbeat.Models.NewsData
 import com.example.lawbeat.Models.Resource
 import com.example.lawbeat.Models.StaticData
 import com.example.lawbeat.NewsAdapter.NewsAdapter
-import com.example.lawbeat.NewsAdapter.ViewPagerAdapter
-import com.example.lawbeat.NewsApi.ApiInterface
 import com.example.lawbeat.repository.NewsRepository
 import com.example.lawbeat.viewmodel.NewsViewModel
 import kotlinx.android.synthetic.main.fragment_news.*
@@ -50,17 +48,15 @@ class NewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_news, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
-//        tid= (arguments?.get("position") as Int?)!!
 
-//        Log.d("position",tid.toString())
+        val tid = arguments?.getInt("tid")?:1
+
 
         val dataRepo = NewsRepository()
         viewModel =
@@ -68,10 +64,7 @@ class NewsFragment : Fragment() {
 
 
         val job = lifecycleScope.launchWhenCreated {
-//            if (tid != null) {
-                viewModel.getUsers(1)
-//            }
-
+                viewModel.getUsers(tid)
         }
 
         Log.d("fetch", job.toString())
@@ -83,7 +76,7 @@ class NewsFragment : Fragment() {
             Log.d("response", response.data?.message.toString())
             when (response) {
                 is Resource.Success -> {
-//                    hideProgressBar()
+
                     response.data?.let { userResponse ->
                         userAdapter = NewsAdapter(context, userResponse.data)
                         recyclerview.adapter = userAdapter
@@ -91,16 +84,12 @@ class NewsFragment : Fragment() {
                     }
                 }
                 is Resource.Error -> {
-//                    hideProgressBar()
+
                     response.message?.let {
                         Log.e("usermessage", "An error occured:$it")
                     }
                 }
-//                is Resource.Loading -> {
-////                    showProgressBar()
-//                    Log.e("loading", "Loading heavily")
-//
-//                }
+
                 else -> {
                     Log.e("loading", "Loading heavily")
                 }

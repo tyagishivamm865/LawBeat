@@ -3,59 +3,28 @@ package com.example.lawbeat
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import com.example.lawbeat.Models.TabEntity
 import com.example.lawbeat.NewsAdapter.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class MainActivity : AppCompatActivity() {
-    var tabLayout: TabLayout? = null
-    var viewPager: ViewPager? = null
+   lateinit var tabLayout: TabLayout
+    lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tabLayout = findViewById<TabLayout>(R.id.tablayout)
-        viewPager = findViewById<ViewPager>(R.id.viewpager)
+        viewPager = findViewById<ViewPager2>(R.id.viewpager)
 
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("TOP STORIES"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("NEWS UPDATES"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("COLUMNS"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("BAR SPEAKS"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("ARTICLES"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("EVENT CORNER"))
-        tabLayout!!.addTab(tabLayout!!.newTab().setText("VIDEOS"))
-
-
-        tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
-
-        val adapter = ViewPagerAdapter(this, supportFragmentManager, tabLayout!!.tabCount)
-        Log.d("tabcount", tabLayout!!.tabCount.toString())
-        viewPager!!.adapter = adapter
-
-        viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-
-        tabLayout!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                viewPager!!.currentItem = tab.position
-//                var fragment = NewsFragment()
-//                val mBundle = Bundle()
-//                var tid=mBundle.putInt("position",tab.position+1)
-//                Log.d("pppp",tid.toString())
-//                fragment.arguments=mBundle
-//                supportFragmentManager.beginTransaction().replace(R.id.viewpager,fragment).commit()
-
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-
-            }
-        })
+        val tabs = listOf(TabEntity(1,"LATEST NEWS"),TabEntity(2,"NEWS UPDATE"),TabEntity(3,"COLOUMNS"),TabEntity(4,"BAR SPEAKS"),TabEntity(5,"ARTICLES"),TabEntity(6,"EVENT CORNER"),TabEntity(7,"VIDEOS"))
+        viewPager.adapter = ViewPagerAdapter(this,tabs)
+        TabLayoutMediator(tabLayout,viewPager){tab,position ->
+            tab.text = tabs.get(position).tab
+        }.attach()
 
     }
 }

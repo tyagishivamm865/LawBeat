@@ -1,25 +1,27 @@
 package com.example.lawbeat.NewsAdapter
 
-import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.lawbeat.MainActivity
+import com.example.lawbeat.Models.TabEntity
 import com.example.lawbeat.NewsFragment
+import java.util.*
 
-class ViewPagerAdapter(private val context: Context, fragmentmanager: FragmentManager, internal var total: Int) : FragmentPagerAdapter(fragmentmanager) {
+class ViewPagerAdapter(private val mainActivity: MainActivity,val tabs:List<TabEntity>) : FragmentStateAdapter(mainActivity) {
+    override fun getItemCount(): Int {
+        return tabs.size
+    }
 
+    override fun createFragment(position: Int): Fragment {
+        val fragment = NewsFragment()
+        fragment.arguments= Bundle().apply {
+            putInt("tid",tabs.get(position).tid)
 
-    override fun getItem(position: Int): Fragment {
-        when (position) {
-            0 -> {
-                return NewsFragment()
-            }
-
-            else -> return NewsFragment()
         }
+        return fragment
+
     }
 
-    override fun getCount(): Int {
-        return total
-    }
+
 }

@@ -19,11 +19,11 @@
         app:tabIndicatorColor="#4863A0"
         app:tabMode="scrollable">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TOP STORIES"
-            style="@style/TabColor"/>
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="TOP STORIES"-->
+<!--            style="@style/TabColor"/>-->
 
 <!--        <com.google.android.material.tabs.TabItem-->
 <!--            android:layout_width="wrap_content"-->
@@ -56,14 +56,14 @@
 <!--            android:text="VIDEOS" />-->
 
     </com.google.android.material.tabs.TabLayout>
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/viewpager">
 
 
 
-    </androidx.viewpager.widget.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
 
 
